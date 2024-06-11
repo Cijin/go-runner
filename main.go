@@ -4,7 +4,7 @@ import (
 	"log"
 	"time"
 
-	"patterns/runner"
+	"runner/runner"
 )
 
 const timeout = 3 * time.Second

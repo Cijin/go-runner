@@ -3,6 +3,8 @@ package main
 import (
 	"log"
 	"time"
+
+	"patterns/runner"
 )
 
 const timeout = 3 * time.Second
@@ -10,18 +12,20 @@ const timeout = 3 * time.Second
 func main() {
 	log.Println("Starting work.")
 
-	// create new runner
+	r := runner.New(timeout)
 
-	// add tasks
+	r.Add(createTask(), createTask(), createTask())
 
-	// start runner
+	if err := r.Start(); err != nil {
+		log.Println("runner stopped with error:", err)
+	}
 
 	log.Println("Process ended.")
 }
 
-func createTask() func(id int) {
+func createTask() func(int) {
 	return func(id int) {
-		log.Printf("Processor task: %d\n", id)
-		time.Sleep(time.Duration(id) * time.Second)
+		log.Printf("Processor - Task #%d\n", id)
+		time.Sleep(time.Duration(id+1) * time.Second)
 	}
 }

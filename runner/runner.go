@@ -25,6 +25,8 @@ type Runner struct {
 }
 
 func New(d time.Duration) *Runner {
+	// NewTimer allows more control over After
+	// underneath After creates a timer anyways
 	timer := time.NewTimer(d)
 
 	return &Runner{
@@ -42,6 +44,8 @@ func (r *Runner) Add(funcs ...func(int)) {
 	r.tasks = append(r.tasks, funcs...)
 }
 
+// execute tasks in a single seperate go routing
+// block till timeout or task completion
 func (r *Runner) Start() error {
 	signal.Notify(r.interrupt, os.Interrupt)
 
@@ -60,6 +64,7 @@ func (r *Runner) Start() error {
 	}
 }
 
+// check for interrupts and execute tasks
 func (r *Runner) run() error {
 	for i, task := range r.tasks {
 		if r.gotInterrupt() {
